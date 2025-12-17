@@ -58,7 +58,8 @@ class UserController extends Controller
 
 		return response()->json([
 			'success' => false,
-			'msg' => 'Error'
+			'msg' => 'Error',
+            'creds' => $credentials
 		], 400);
 		/*
 		// debug
