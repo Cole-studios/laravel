@@ -41,7 +41,9 @@ class UserController extends Controller
 			'username' => 'required',
 			'password' => 'required'
 		]);
-		
+
+        dd($request->all());
+        
 		if (Auth::attempt($credentials)){
 			// session stuff? idk
 			$request->session()->regenerate();
