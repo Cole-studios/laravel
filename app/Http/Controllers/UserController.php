@@ -43,6 +43,7 @@ class UserController extends Controller
 		]);
 
         dd($request->all());
+        error_log("gae");
         
 		if (Auth::attempt($credentials)){
 			// session stuff? idk
