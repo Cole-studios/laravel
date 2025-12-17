@@ -42,7 +42,6 @@ class UserController extends Controller
 			'password' => 'required'
 		]);
 
-        dd($request->all());
         error_log("gae");
 
 		return response()->json([
