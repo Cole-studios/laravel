@@ -43,13 +43,8 @@ class UserController extends Controller
 		]);
 
         error_log("gae");
-
-		return response()->json([
-			'success' => false,
-			'msg' => 'Error'
-		], 400);
         
-        /*
+        
 		if (Auth::attempt($credentials)){
 			// session stuff? idk
 			$request->session()->regenerate();
@@ -59,6 +54,12 @@ class UserController extends Controller
 				'msg' => 'Close enough. Welcome back Privyet. o7'
 			], 200);
 		}
+        
+
+		return response()->json([
+			'success' => false,
+			'msg' => 'Error'
+		], 400);
 		/*
 		// debug
 		return response()->json([
