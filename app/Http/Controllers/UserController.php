@@ -31,7 +31,7 @@ class UserController extends Controller
 		->json([
 			'success' => true,
 			'msg' => 'Account successfully created! Check your email for verification',
-			'user' => $user
+			'user' => $user->username
 		], 201);
 	}
 	
@@ -55,8 +55,7 @@ class UserController extends Controller
 		// debug
 		return response()->json([
 			'success' => false,
-			'msg' => 'Error',
-			'dbg' => $credentials
+			'msg' => 'Error'
 		], 400);
 		/*
 		return response()->json([
@@ -89,7 +88,7 @@ class UserController extends Controller
 			'password' => 'required'
 		]);
 		
-		error_log("finding user" . $request->username);
+		error_log("finding user");
 		$user = User::findOrFail($request->username);
 		
 		error_log("updating");
@@ -125,7 +124,8 @@ class UserController extends Controller
 			'data' => $account
 		], 201);*/
 
-	// Profile info
+	/*
+	// Profile info *DEFUNCT*
 	public function getProfile(Request $request){
 		$user = User::where('username', $username)->first();
 		
@@ -134,7 +134,7 @@ class UserController extends Controller
 			'success' => true,
 			'data' => $user
 		], 200);
-	}
+	}*/
 	
 	
 	// Upload a profile picture
@@ -143,16 +143,16 @@ class UserController extends Controller
         $request->validate([
             //'profilepic' => 'required|file|image|max:1535',
             //'username'   => 'required|string'
-            'profilepic' => 'required|max:4096',
+            'profilepic' => 'required|image|mimes:jpeg,png|max:2048',
             'username'   => 'required'
         ]);
 		
-		error_log("uploadPic hit" . $request->username);
+		error_log("uploadPic hit");
 		
 		error_log($request->username);
 		
-        $user = User::where('username', $request->username)->first();
-		// code stops here and causes a 302 error on the front end
+		$user = Auth::user();
+        //$user = User::where('username', $request->username)->first();
 		
 		error_log("user def");
 		
@@ -173,7 +173,7 @@ class UserController extends Controller
 		error_log("getting file contents");
         $contents = file_get_contents($file->getRealPath());
 		
-		// limit seems to be around 255~279 kb, oof
+		// limit seems to be around 255~279 kb, attempts to change yield nothing, oof
 		error_log("[ Raw size: " . filesize($file->getRealPath()) . "] [ Encoded size: " . strlen(base64_encode($contents)) . " ]");
 		error_log("saving to profilepic column");
         $user->profilepic = base64_encode($contents);
@@ -184,7 +184,6 @@ class UserController extends Controller
 				'success' => true,
 				'msg' => 'Profile picture changed'
 			], 200)
-			->header('Access-Control-Allow-Origin', '*')
 			->header('Content-Type', 'image/jpeg');
     }
 	
@@ -193,7 +192,8 @@ class UserController extends Controller
     public function getPic(Request $request, $username)
     {
 		error_log("get where");
-        $user = User::where('username', $request->username)->first();
+        $user = Auth::user();
+		//$user = User::where('username', $request->username)->first();
 		
 		error_log("user exist?");
 		if (!$user || !$user->profilepic) {
@@ -211,26 +211,6 @@ class UserController extends Controller
 		error_log("return!");
 		return response($image)
 			->header('Content-Type', 'image/jpeg');
-		/*
-        $request->validate([
-            'username' => 'required|string'
-        ]);
-		
-        $user = Login::where('username', $request->username)->first();
-
-        if (!$user || !$user->profilepic) {
-            return response()->json(['success' => false, 'message' => 'No image found'], 404)
-                             ->header('Access-Control-Allow-Origin', '*');
-        }
-
-        $base64 = base64_encode($user->profilepic);
-
-        return response()->json([
-            'username' => $user->username,
-            'image' => 'data:image/jpeg;base64,' . $base64
-        ])->header('Access-Control-Allow-Origin', '*');
-		
-		*/
     }
 	
 }
