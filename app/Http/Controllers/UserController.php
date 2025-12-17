@@ -50,7 +50,7 @@ class UserController extends Controller
 			'msg' => 'Error'
 		], 400);
         
-        
+        /*
 		if (Auth::attempt($credentials)){
 			// session stuff? idk
 			$request->session()->regenerate();
